@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import CharacterCard from '../../components/CharacterCard'
 import SearchInput from '../../components/SearchInput'
 import type { Character } from '@/types/character.type'
@@ -19,10 +19,16 @@ function CharactersPage() {
   })
 
   if (isLoading) return <div className="text-center py-12">Loading...</div>
-  if (error)
+  if (error) {
+    const isSearching = search.trim().length > 0
+
     return (
       <div className="text-center py-12 text-red-500">
-        <p className="mb-4">Error loading characters</p>
+        <p className="mb-4">
+          {isSearching
+            ? `No characters found for "${search}"`
+            : 'Error loading characters'}
+        </p>
 
         <button
           onClick={() => window.location.reload()}
@@ -32,6 +38,7 @@ function CharactersPage() {
         </button>
       </div>
     )
+  }
 
   return (
     <div className="p-10">
